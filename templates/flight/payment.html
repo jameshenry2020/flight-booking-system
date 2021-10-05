@@ -1,0 +1,33 @@
+{%extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5 py-5">
+      <div class="card mx-auto" style="width:20rem">
+           <div class="card-header">
+             transaction Details 
+           </div>
+           <div class="card-body">
+            <table class="table">
+              <tbody>    
+                <tr>
+                  <td colspan="2">Adults</td>
+                  <td>{{num_adults}}</td>
+                </tr>
+                <tr>
+                  {%if num_children  %}
+                    <td colspan="2">Children</td>
+                    <td>{{ num_children }}</td>
+                 {%endif%}
+                </tr>
+                <tr>
+                  <td colspan="2">Total Amount</td>
+                  <td>NGN {{amount}}</td>
+                </tr>
+              </tbody>
+            </table>
+             
+              <button class="btn btn-success btn-block">Pay Now</button>
+           </div>
+      </div>
+  </div>
+{%endblock content %}

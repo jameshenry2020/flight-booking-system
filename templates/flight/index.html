@@ -1,0 +1,102 @@
+{%extends "base.html"%}
+
+{%block title%}<title>search flight </title>{%endblock title%}
+
+{% block content %}
+     {% include 'flight/header.html'%}
+     
+    <section class="search-section pt-4">
+    <div class="container mt-5">
+          <!-- Nav tabs -->
+        <div class="col-md-8 ">
+        <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#home">search flight</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#menu1">manage booking</a>
+        </li>
+    
+        </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="home" class="container card py-3 tab-pane active"><br>
+      <h3>Search for flight</h3>
+      
+      <form action="{%url 'search'%}" id="myForm" method="GET" data-urldestination="{%url 'destination'%}"> 
+       <div class="form-row"> 
+          <div class="form-group col-md-6">
+         <label for="originselect">Origin</label>
+         <select id="originselect" class="form-control" name="origin">
+             <option>choose origin</option>
+             {%for airport in airports %}
+             <option value="{{airport.code}}">{{airport}}</option>
+             {%endfor%}
+         </select>
+          </div><br>
+          <div class="form-group col-md-6">
+         <label for="destination">Destination</label>
+         <select id="destinationselect" class="form-control" name="destination">
+             <option>----------------</option>             
+         </select>
+          </div>
+       </div><br> 
+       <div class="form-row">
+          <div class="form-group col-md-6">
+              <label for="departure date">Departure Date</label>
+              <input type="date" name="departure" id="departure" class="form-control">
+          </div>
+       </div>
+     <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="Adults">Adult</label>
+            <select id="numberofAdult" class="form-control" aria-label="Default select example" name="adult">
+                <option value="0">adult</option>
+                <option value="1">1</option>
+                <option value="2">2</option> 
+                <option value="3">3</option> 
+                <option value="4">4</option>              
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="children">children</label>
+            <select id="numberofchildren" class="form-control" name="children">
+                <option value="0">children</option>
+                <option value="1">1</option>
+                <option value="2">2</option> 
+                <option value="3">3</option> 
+                <option value="4">4</option>              
+            </select>
+        </div>          
+    </div>
+      <div>
+         <button class="btn btn-danger" type="submit">flight search</button>
+     </div>
+     </form>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+ {% endblock content %}
+ {% block javascript %}
+ <script>
+    $(document).ready(function(){
+        $('#originselect').change(function(){
+            let urldestination=$('#myForm').data('urldestination');
+            let originvalue=$(this).val();
+            $.ajax({
+                url:urldestination,
+                data:{
+                    flight_origin:originvalue
+                },
+                success:function(response){
+                    $('#destinationselect').html(response);
+                }
+            })
+            
+        })
+    })
+</script>
+{% endblock javascript %}

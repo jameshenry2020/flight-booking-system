@@ -1,0 +1,51 @@
+{%extends "base.html"%}
+{% load crispy_forms_tags %}
+
+
+
+
+{% block content %}
+   <div class="container mt-5 py-5">
+       <div class="row">
+           <div class="col-md-9">
+               <div class="card py-4 px-4">
+                   <form action="" method="POST">
+                       {%csrf_token%}
+                       {% if num_passenger > 1 %}
+                         {{passengerformsets.management_form}}
+                         {%for form in passengerformsets%}
+                             <h4>Passenger Information {{forloop.counter}}</h4>
+                             
+                                <div class="form-group col-md-12">
+                                        {{form.names|as_crispy_field}}
+                                        {{form.address|as_crispy_field}}
+                                </div>
+            
+                             <div class="form-row">
+                                 <div class="form-group col-md-6">
+                                        {{form.gender|as_crispy_field}}
+                                        {{form.next_of_kin|as_crispy_field}}
+                                 </div>
+                                 <div class="form-group col-md-6">
+                                        {{form.age|as_crispy_field}}
+                                        {{form.kins_mobile|as_crispy_field}}
+                                </div>
+                             </div>
+                            <!-- {{form|crispy}} -->
+                         {%endfor%}
+                            
+                       {%else%}
+
+                          {{form}}
+                       {%endif%}
+                       <input type="submit" class="btn btn-primary" value="Save">
+                   </form>
+               </div>
+           </div>
+           <div class="col-md-3">
+               
+           </div>
+       </div>
+   </div>
+
+{%endblock content %}

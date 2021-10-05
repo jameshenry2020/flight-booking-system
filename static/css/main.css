@@ -1,0 +1,33 @@
+body{
+    background: #f0f0f0;
+}
+
+.navbar-brand{
+    font-size: 28px !important;
+    text-transform: uppercase !important;
+}
+.nav-link{
+    font-size: 18px !important;
+}
+.search-section{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url(../img/bg.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+}
+.custom-w{
+    width: 200px !important;
+    padding: 10px 0 !important;
+    display: block !important;
+}
+
+
+.f_box{
+  width: 200px;
+  text-align: center;
+}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+
+{%block title%} 
+    Search Result
+{%endblock title%}
+
+
+{% block content %}
+
+<div class="container py-4 mt-5">
+    <h2>Search Flight</h2>
+ <div class="card bg-white my-4" style="width: 800px;">
+     <table class="table">
+         <thead class="thead-dark">
+             <tr>
+             <th scope="col">flight information</th>
+             <th scope="col">Economy</th>
+             <th scope="col">Business</th>
+            </tr>
+         </thead>
+         <tbody>
+             {% for flight in search_queries %}
+             <tr>
+                <td class="d-flex flex-row justify-content-center">
+                    <div class="f_box">
+                        <span>{{flight.departure_time}}</span>
+                        <p>{{flight.origin.city}}</p> 
+                    </div>
+                    <i class="fas fa-plane"></i>
+                    <div class="f_box">
+                        <span>{{flight.arrival_time}}</span>
+                        <p>{{flight.destination.city}}</p> 
+                    </div>             
+                </td>
+
+                {% for klass in flight.klass.all%}
+                {%if klass.class_price == 0.00 %}
+                   <td class="text-center py-4"> <p class="font-weight-bold"> No Flight</p> </td>
+                    {%else%}
+                    <td class="text-center">
+                       <h4> NGN {{klass.class_price}}</h4>
+                       <a href="{{klass.get_absolute_url}}" class="btn btn-outline-danger">Select</a>      
+                    </td>
+                   {%endif%}
+                {%endfor%}
+             </tr>
+             {%endfor %}
+         </tbody>
+
+         
+     </table>
+ </div>
+</div>
+
+{% endblock content %}

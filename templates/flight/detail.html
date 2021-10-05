@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+
+{%block title%} 
+    Flight Selected
+{%endblock title%}
+
+
+{%block content%}
+ <div class="container py-4 mt-5">
+     <div class="row">
+         <div class="col-md-8 card">
+            <div class="card-header">
+                Flight Total Price 
+            </div>
+            <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Passengers</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col"> Fare</th>
+                    <th scope="col">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Adult</td>
+                    <td>{{num_adults}}</td>
+                    <td>{{flight_info.class_price}}</td>
+                    <td> NGN {{adult_total_price}}</td>
+                  </tr>
+                  {% if num_children > 0 %}
+                  <tr>
+                    <td>Children</td>
+                    <td>{{num_children}}</td>
+                    <td>{{flight_info.class_price}}</td>
+                    <td>NGN {{children_total_price}}</td>
+                  </tr>
+                  {% endif %}
+                  <tr style="border-top: 1px solid #000;">
+                      <td colspan="3">Total</td>
+                      <td>NGN {{total_cost_price}}</td>
+                  </tr>
+                  
+                  <tr>
+                      <td>
+                          <a href="{%url 'booking' flight_info.id %}" class="btn btn-primary">Book Now</a>
+                      </td>
+                  </tr>
+                </tbody>
+              </table>
+         </div>
+         <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary">
+                    Trip Summary 
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Departing
+                            <h4>{{flight_info.flight.origin.city}}</h4>
+                            <p>{{flight_info.flight.departure_date}} <span>{{flight_info.flight.departure_time}}</span></p>
+                            
+                        </li>
+                        <li class="list-group-item">
+                            Arrival
+                            <h4>{{flight_info.flight.destination.city}}</h4>
+                            <p>{{flight_info.flight.departure_date}} <span>{{flight_info.flight.arrival_time}}</span></p>
+                        </li>
+                        <li class="list-group-item">
+                            <h4>Flight ID : {{flight_info.flight.flight_no}}</h4>
+                            <p>{{flight_info.name}}</p>
+                        </li>
+                      </ul>
+                </div>
+
+            </div>
+         </div>
+     </div>
+ </div>
+
+{%endblock content%}
