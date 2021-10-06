@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 import uuid
+import secrets
 
 class Airport(models.Model):
     code=models.CharField(max_length=3)
@@ -91,9 +92,18 @@ class Payment(models.Model):
     amount=models.CharField(max_length=10)
     ref_code=models.CharField(max_length=255)
     verified=models.BooleanField(default=False)
+    completed=models.BooleanField(default=False)
     date=models.DateTimeField(auto_now_add=True)
 
-    def __str__(self) -> str:
-        return f"{self.user.username}-booking-completed"
+    def __str__(self):
+        return f"{self.user.username}-booking"
+
+    def save(self,*args, **kwargs):
+        while not self.ref_code:
+            ref=secrets.token_urlsafe(50)
+            obj_similar=Payment.objects.filter(ref_code=ref)
+            if not obj_similar:
+                self.ref_code=ref
+        return super().save(*args, **kwargs)
         
 

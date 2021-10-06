@@ -1,13 +1,17 @@
 from django.forms.formsets import formset_factory
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.base import View
-from .models  import AirlineBooking, Airport, Flight, FlightClass, Passenger
+from .models  import AirlineBooking, Airport, Flight, FlightClass, Passenger, Payment
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import AddPassengerForm, UserRegisterForm
 from django.forms import formset_factory
+from django.conf import settings
+from .paystack import PayStack
+from django.contrib import messages
+
 
 # Create your views here.
 class FlightSearchPage(View):
@@ -105,27 +109,48 @@ def AddPassenger(request, flight_id):
         return render(request, "flight/passenger.html", context)
         
 
-class PaymentView(View):
+class PaymentView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         flight=FlightClass.objects.get(id=self.kwargs['flight_id'])
         price=flight.class_price
         adult_n=request.session.get('num_adults')
         children_n=request.session.get('num_children')
-        num_passanger=int(adult_n) + int(children_n)
-        adult_total=int(adult_n) * price
-        children_total=int(children_n) * price
+        num_passanger=int(adult_n) + int(children_n) 
         amount=num_passanger * price
+        payment, created=Payment.objects.get_or_create(user=request.user, amount=amount)
+        print('payment ref: ', payment.ref_code )
         context={
-            'amount':amount,
+            'amt':amount,
+            'amount':amount * 100,
+            'ref':payment.ref_code,
             'num_adults':adult_n,
             'num_children':children_n,
-            'total_adult':adult_total,
-            'total_children':children_total
+            'paystack_public_key':settings.PAYSTACK_API_PUBLIC_KEY
         }
         return render(request, "flight/payment.html" , context)
 
 
+@login_required
+def payment_verification(request, ref):
+    payment=get_object_or_404(Payment, ref_code=ref)
+    flight_booking=get_object_or_404(AirlineBooking, user=request.user, is_booked=False)
+    paystack=PayStack()
+    status, result=paystack.verify_payment(ref)
+    if status:
+        payment.verified=True
+        payment.completed=True
+        payment.save()
+        flight_booking.is_booked=True
+        flight_booking.save()
+        messages.success(request, 'payment completed successfully')
+        return redirect('dashboard', user_id=request.user.id)
+    messages.warning(request, 'payment failed')
+    return redirect('payment', flight_id=flight_booking.flight.id)
+    
+    
 
+
+    
 
 def register_view(request):
     next=request.session.get('next', '')
@@ -157,7 +182,7 @@ def login_view(request):
             login(request, user)
             if nxt is not None:
                 return redirect(request.GET.get('next'))
-            return redirect('dashboard')
+            return redirect('dashboard', user_id=request.user.id)
         context["error"]="invalid credentials",     
     return render(request, "flight/login.html", context)
 
@@ -169,7 +194,7 @@ def logout_view(request):
     return render(request, "flight/logout.html", {})
 
 @login_required
-def dashboard_view(request):
+def dashboard_view(request, user_id):
 
     return render(request, "flight/dashboard.html")
 

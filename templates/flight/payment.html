@@ -21,13 +21,38 @@
                 </tr>
                 <tr>
                   <td colspan="2">Total Amount</td>
-                  <td>NGN {{amount}}</td>
+                  <td>NGN {{amt}}</td>
                 </tr>
               </tbody>
             </table>
              
-              <button class="btn btn-success btn-block">Pay Now</button>
+              <button class="btn btn-success btn-block" onclick="payWithPayStack()">Pay Now</button>
            </div>
       </div>
   </div>
 {%endblock content %}
+
+
+{% block javascript %}
+<script src="https://js.paystack.co/v1/inline.js"></script> 
+  <script>
+  function payWithPayStack() {
+    var handler = PaystackPop.setup({
+      key: '{{paystack_public_key}}', // Replace with your public key
+      email: "{{request.user.email }}",
+      amount: "{{amount}}", 
+      currency: 'NGN',
+      ref:'{{ref}}', 
+      channels:['card','mobile_money'],
+      callback: function(response) {
+        //this happens after the payment is completed successfully
+          window.location.href="{%url 'verify-payment' ref %}"
+      },
+      onClose: function() {
+        alert('Transaction was not completed, window closed.');
+      },
+    });
+    handler.openIframe();
+}
+  </script>
+{% endblock javascript %}

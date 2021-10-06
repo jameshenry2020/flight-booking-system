@@ -39,12 +39,24 @@
 </div>
   </nav>
 {% block content %}
-     
+    <div class="mt-5 pt-5">
+      {% if messages %}
+      <div class="messages mt-4 mx-auto">
+        {% for message in messages %}
+        <span {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
 {% endblock content %}
   
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="{%static 'js/bootstrap.min.js'%}"></script>
   {% block javascript %}
+
+  
+
+
   
     
   {% endblock javascript %}
