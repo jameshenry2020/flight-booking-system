@@ -88,6 +88,7 @@ class Passenger(models.Model):
  
     
 class Payment(models.Model):
+    flight=models.ForeignKey(FlightClass, on_delete=models.DO_NOTHING, null=True, blank=True)
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     amount=models.CharField(max_length=10)
     ref_code=models.CharField(max_length=255)

@@ -16,10 +16,9 @@ from django.contrib import messages
 # Create your views here.
 class FlightSearchPage(View):
     def get(self, request, *args, **kwargs):
+        context={}
         airports=Airport.objects.all()
-        context={
-            'airports':airports
-        }
+        context['airports']=airports
         return render(request, 'flight/index.html', context)
     
 
@@ -147,7 +146,31 @@ def payment_verification(request, ref):
     messages.warning(request, 'payment failed')
     return redirect('payment', flight_id=flight_booking.flight.id)
     
+@login_required
+def check_flight(request):   
+    q1=request.GET.get('ref', None)
+    q2=request.GET.get('flight_id',None)
+    if q1 is not None and q2 is not None:
+        lookups=Q(ref_code__iexact=q1) & Q(flight__flight__flight_no=q2)
+        queryset=Payment.objects.filter(lookups)
+        fg=queryset[0].flight
+        booked_members=AirlineBooking.objects.filter(user=request.user, flight=fg, is_booked=True)
+        print(booked_members[0].passengers.all())
+    context={
+          'bookings':queryset,
+          'passenger_booked':booked_members
+    }
+    return render(request, "flight/ticket.html", context)
     
+        
+            
+            
+                # fg=queryset[0].flight
+                # 
+                
+                # context['mypassengers']=passengers
+
+    pass
 
 
     
@@ -195,8 +218,11 @@ def logout_view(request):
 
 @login_required
 def dashboard_view(request, user_id):
-
-    return render(request, "flight/dashboard.html")
+    complete_booking=Payment.objects.filter(user=request.user, verified=True)
+    context={
+        'bookings':complete_booking 
+    }
+    return render(request, "flight/dashboard.html", context)
 
 @login_required
 def booking_process(request, flight_id):

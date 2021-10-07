@@ -1,0 +1,46 @@
+{%extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5 py-5">
+      <div class="card mx-auto" style="width:40rem">
+        <div class="card-body">
+           {%if bookings %}      
+              {% for book in bookings %}
+                <h4> <span>{{book.flight.flight.origin.city}}</span>----<span>{{book.flight.flight.destination.city}}</span></h4>
+                <p><span>{{book.flight.flight.departure_time}}</span>------ <span>{{book.flight.flight.arrival_time}}</span></p>
+                <p>{{book.flight.flight.departure_date.date|date:"D d M Y" }}</p>
+                <h4>class :{{book.flight.name}} </h4>
+                <p>Flight: {{book.flight.flight.flight_no}}</p>
+                <hr>
+                {%endfor%}
+
+                <table class="table">
+                    <tr>
+                        <th>name</th>
+                        <th>ticket no</th>
+                        <th>seat number</th>
+                    </tr>
+                    {%for p in passenger_booked%}
+                           {%for member in p.passengers.all%}
+                                <tr>
+                                    <td>{{member.names}}</td>
+                                    <td>{{member.ticket_no}}</td>
+                                    <td>{{member.seat_number}}</td>
+                                </tr>
+                        {%endfor%}
+
+                    {%endfor%}
+
+                </table>
+                {%else%}
+
+
+
+             {%endif%}
+              
+           </div>
+      </div>
+  </div>
+{%endblock content %}
+
+

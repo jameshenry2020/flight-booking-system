@@ -75,7 +75,30 @@
      </div>
      </form>
     </div>
+    <div id="menu1" class="container card py-3 tab-pane"><br>
+        <h3>manage flight booking</h3>   
+        <form action="{%url 'ticket' %}" id="" method="GET"> 
+             
+            <div class="form-group">
+              <label for="originselect">Ref Number</label>
+             <input type="text" name="ref" class="form-control">
+            </div><br>  
+     
+            <div class="form-group">
+                <label for="departure ">Flight ID</label>
+                <input type="text" name="flight_id" id="departure" class="form-control">
+            </div>
+        
+      
+        <div>
+           <button class="btn btn-danger" type="submit">search ticket</button>
+       </div>
+       </form>
+      </div>
   </div>
+   
+  
+
 </div>
 </div>
 </section>
