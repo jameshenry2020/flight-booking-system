@@ -102,7 +102,17 @@ def AddPassenger(request, flight_id):
             return render(request, "flight/passenger.html", context)    
         else:
             form = AddPassengerForm()
+            get_booking=AirlineBooking.objects.get(user=request.user, is_booked=False)
+            if request.method =="POST":
+                form=AddPassengerForm(request.POST) 
+                if form.is_valid():  
+                    instances=form.save(commit=False)
+                    instances.flight=flight
+                    instances.save()   
+                    get_booking.passengers.add(instances)
+                    return redirect('payment', flight_id=flight.id)
             context['form']=form
+            context['flight_info']=flight
 
             # return render(request, "flight/passenger.html", context)    
         return render(request, "flight/passenger.html", context)

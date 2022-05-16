@@ -7,7 +7,7 @@
 {% block content %}
    <div class="container mt-5 py-5">
        <div class="row">
-           <div class="col-md-9">
+           <div class="col-md-8">
                <div class="card py-4 px-4">
                    <form action="" method="POST">
                        {%csrf_token%}
@@ -35,15 +35,39 @@
                          {%endfor%}
                             
                        {%else%}
-
-                          {{form}}
+                       <h4>Passenger Information</h4>
+                          {{form|crispy}}
                        {%endif%}
                        <input type="submit" class="btn btn-primary" value="Save">
                    </form>
                </div>
            </div>
-           <div class="col-md-3">
-               
+           <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary">
+                    Trip Summary 
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Departing
+                            <h4>{{flight_info.flight.origin.city}}</h4>
+                            <p>{{flight_info.flight.departure_date}} <span>{{flight_info.flight.departure_time}}</span></p>
+                            
+                        </li>
+                        <li class="list-group-item">
+                            Arrival
+                            <h4>{{flight_info.flight.destination.city}}</h4>
+                            <p>{{flight_info.flight.departure_date}} <span>{{flight_info.flight.arrival_time}}</span></p>
+                        </li>
+                        <li class="list-group-item">
+                            <h4>Flight ID : {{flight_info.flight.flight_no}}</h4>
+                            <p>{{flight_info.name}}</p>
+                        </li>
+                      </ul>
+                </div>
+
+            </div>
            </div>
        </div>
    </div>
