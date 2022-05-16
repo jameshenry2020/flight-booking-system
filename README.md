@@ -9,7 +9,7 @@ this apps handle the following features :
      see the payment summary and trip summary (with a pay now button),
      handle payment (using paystack payment service),
      booking complete you can login to your dashboard to see your booking info and transaction invoice,
-     manage flight booking( cancel booking and process reform).
+     manage flight booking( cancel booking and process refund).
      
      
      
